@@ -2,11 +2,13 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 
-var VerifyToken = require('./VerifyToken');
+var VerifyToken = require('../helper/VerifyToken');
 
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
-var User = require('../user/User');
+var User = require('../model/User');
+
+var tokenBlacklistBusiness = require('../business/TokenBlacklistBusiness');
 
 /**
  * Configure JWT
@@ -38,7 +40,14 @@ router.post('/login', function(req, res) {
 });
 
 router.get('/logout', function(req, res) {
-  res.status(200).send({ auth: false, token: null });
+  var token = req.headers['x-access-token'];
+  if (!token) 
+    return res.status(403).send({ auth: false, message: 'No token provided.' });
+
+  tokenBlacklistBusiness.insert(token, function (err, res) {
+    if (err) return res.status(500).send("There was a problem adding the information to the database.");
+    res.status(200).send({ auth: false, token: null });
+  })  
 });
 
 router.post('/register', function(req, res) {

@@ -1,5 +1,6 @@
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('../config'); // get our config file
+var tokenBlacklistBusiness = require('../business/TokenBlacklistBusiness');
 
 function verifyToken(req, res, next) {
 
@@ -13,9 +14,15 @@ function verifyToken(req, res, next) {
     if (err) 
       return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });    
 
-    // if everything is good, save to request for use in other routes
-    req.userId = decoded.id;
-    next();
+      tokenBlacklistBusiness.checkInvalid(token, function (isInvalid) {
+        if (isInvalid) {
+          return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });  
+        } else {
+          // if everything is good, save to request for use in other routes
+          req.userId = decoded.id;
+          next();
+        }
+      })
   });
 
 }
