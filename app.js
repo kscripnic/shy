@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var db = require('./db');
 global.__root   = __dirname + '/'; 
-var controlDir = __root + 'controller/'
+var controlDir = __root + 'controller/';
 
 app.get('/api', function (req, res) {
   res.status(200).send('API works.');

@@ -1,6 +1,9 @@
 var mongoose = require('mongoose');  
 var TokenBlacklistSchema = new mongoose.Schema({  
-  token: String
+  token: {
+    type: String,
+    required: true
+  }
 });
 mongoose.model('TokenBlacklist', TokenBlacklistSchema);
 
