@@ -14,4 +14,7 @@ app.use('/api/user', UserController);
 var AuthController = require(controlDir + 'AuthController');
 app.use('/api/auth', AuthController);
 
+var QuestionController = require(controlDir + 'QuestionController');
+app.use('/api/question', QuestionController);
+
 module.exports = app;
