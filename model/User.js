@@ -13,6 +13,11 @@ var UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  isEmailValid: {
+    type: Boolean,
+    default: false,
+    required: true
+  },
   questions: [{ 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'Question'
